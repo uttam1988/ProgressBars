@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
+import EndPointReducer from './reducer_endPoints';
 
 const rootReducer = combineReducers({
-  state: (state = {}) => state
+    endPoint: EndPointReducer
 });
 
 export default rootReducer;
