@@ -2,11 +2,25 @@ import React, { Component } from 'react';
 
 export default class ProgressBar extends Component {
 
+  constructor() {
+    super();
+    this.state = {
+      barOne: true,
+      barTwo: true,
+      barThree: true,
+      barFour: true
+    };
+  }
+
 
   getProgressBars(bars) {
-   return bars.map((bar) => {
-     return <div className="progress">
-        <div className="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
+   return bars.map((bar,index) => {
+     const progressWidth = {
+       width:bar+'%'
+     };
+     console.log(typeof index);
+     return <div className="progress" key={index}>
+        <div className={"progress-bar progress-bar-info progress-bar-striped " +(this.state.barOne ? 'active' : '') } role="progressbar" style={progressWidth}>
           {bar}%
         </div>
       </div>
@@ -14,7 +28,7 @@ export default class ProgressBar extends Component {
   }
 
   render() {
-    const { onButtonClick } = this.props;
+    const { actionOne,actionTwo,actionThree,actionFour } = this.props;
     const endPoint = this.props.endPoint;
 
     return (
@@ -37,10 +51,10 @@ export default class ProgressBar extends Component {
                 </select>
               </div>
               <div className="col-xs-12 col-sm-6">
-                <button type="button" onClick= { onButtonClick } className="col-xs-12 col-md-3 btn btn-primary">-10</button>
-                <button type="button" className="col-xs-12 col-md-3 btn btn-primary">+20</button>
-                <button type="button" className="col-xs-12 col-md-3 btn btn-primary">+30</button>
-                <button type="button" className="col-xs-12 col-md-3 btn btn-primary">-25</button>
+                <button type="button" onClick= { actionOne } className="col-xs-12 col-md-3 btn btn-primary">-10</button>
+                <button type="button" onClick= { actionTwo } className="col-xs-12 col-md-3 btn btn-primary">+20</button>
+                <button type="button" onClick= { actionThree } className="col-xs-12 col-md-3 btn btn-primary">+30</button>
+                <button type="button" onClick= { actionFour } className="col-xs-12 col-md-3 btn btn-primary">-25</button>
               </div>
             </div>
           </div>

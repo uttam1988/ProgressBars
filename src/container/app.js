@@ -7,16 +7,35 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.handleButtons = this.handleButtons.bind(this);
+    this.actionOne = this.actionOne.bind(this);
+    this.actionTwo = this.actionTwo.bind(this);
+    this.actionThree = this.actionThree.bind(this);
+    this.actionFour = this.actionFour.bind(this);
   }
 
-  handleButtons() {
+  actionOne() {
+    console.log(this.props);
+  }
+
+  actionTwo() {
+    console.log(this.props);
+  }
+
+  actionThree() {
+    console.log(this.props);
+  }
+
+  actionFour() {
     console.log(this.props);
   }
 
   render() {
     return ( <ProgressBar
-      onButtonClick={this.handleButtons} endPoint={this.props.endPoint}/> );
+      actionOne={this.actionOne}
+      actionTwo={this.actionTwo}
+      actionThree={this.actionThree}
+      actionFour={this.actionFour}
+      endPoint={this.props.endPoint}/> );
   }
 }
 
