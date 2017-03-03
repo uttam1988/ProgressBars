@@ -1,49 +1,84 @@
 import React, { Component } from 'react';
+import ProgressValues from '../components/ProgressValues';
 
 export default class ProgressBar extends Component {
 
   constructor() {
     super();
+
     this.state = {
-      barOne: true,
-      barTwo: true,
-      barThree: true,
-      barFour: true
-    };
+      activeBar: 0,
+      activeBarValue: 0,
+      value: 'p1'
+    }
+
+    this.optionChange = this.optionChange.bind(this)
   }
 
-
-  getProgressBars(bars) {
-   return bars.map((bar,index) => {
-     const progressWidth = {
-       width:bar+'%'
-     };
-     console.log(typeof index);
-     return <div className="progress" key={index}>
-        <div className={"progress-bar progress-bar-info progress-bar-striped " +(this.state.barOne ? 'active' : '') } role="progressbar" style={progressWidth}>
-          {bar}%
-        </div>
-      </div>
+  handleBarClick(i, value) {
+    this.setState({
+      activeBar: i,
+      activeBarValue: value
     });
+    this.props.handleBarClick(i,value);
+  }
+
+  handleValueButtonClick(type, value) {
+    let updatedPercent;
+    if(type == 'add') {
+      updatedPercent = this.state.activeBarValue + value;
+    } else {
+      updatedPercent = this.state.activeBarValue - value;
+      if(updatedPercent < 0) {
+        updatedPercent = 0;
+      }
+    }
+    this.setState({
+      activeBarValue: updatedPercent
+    });
+    this.props.handleBarClick(this.state.activeBar,updatedPercent);
+  }
+
+  optionChange(e) {
+    this.setState({ value: e.target.value });
+    if(e.target.value == 'p1') {
+       this.setState({ activeBar: 0 });
+    } else if(e.target.value == 'p2') {
+       this.setState({ activeBar: 1 });
+    } else if(e.target.value == 'p3') {
+       this.setState({ activeBar: 2 });
+    } else {
+       this.setState({ activeBar: 3 });
+    }
+
   }
 
   render() {
-    const { actionOne,actionTwo,actionThree,actionFour } = this.props;
+    const { actionOne, actionTwo, actionThree, actionFour } = this.props;
     const endPoint = this.props.endPoint;
+    const buttons = this.props.endPoint.buttons;
 
     return (
       <div id="main-wrapper">
         <div className="row">
           <div className="col-xs-12">
             <h1>Control Progress Bars</h1>
-            {this.getProgressBars(endPoint.bars)}
+            {
+              endPoint.bars.map((bar, index) => {
+                return <ProgressValues
+                          key={ index }
+                          barWidth={ bar }
+                          onBarClick={ this.handleBarClick.bind(this, index, bar) }
+                          isActive={ this.state.activeBar === index ? true : false }/>
+              })
+            }
           </div>
           <div className="clearfix"></div>
           <hr></hr>
           <div className="col-xs-12">
             <div className="row">
               <div className="col-xs-12 col-sm-6">
-                <select className="form-control">
+                <select className="form-control" onChange={this.optionChange} value={this.state.value}>
                   <option value="p1">Progress One</option>
                   <option value="p2">Progress Two</option>
                   <option value="p3">Progress Three</option>
@@ -51,10 +86,16 @@ export default class ProgressBar extends Component {
                 </select>
               </div>
               <div className="col-xs-12 col-sm-6">
-                <button type="button" onClick= { actionOne } className="col-xs-12 col-md-3 btn btn-primary">-10</button>
-                <button type="button" onClick= { actionTwo } className="col-xs-12 col-md-3 btn btn-primary">+20</button>
-                <button type="button" onClick= { actionThree } className="col-xs-12 col-md-3 btn btn-primary">+30</button>
-                <button type="button" onClick= { actionFour } className="col-xs-12 col-md-3 btn btn-primary">-25</button>
+                {
+                  buttons.map((button, i) => {
+                    const buttonType = (button < 0) ? 'sub' : 'add';
+                    const buttonValue = Math.abs(button);
+                    return <button
+                              type="button"
+                              onClick= { this.handleValueButtonClick.bind(this, buttonType, buttonValue) }
+                              className="col-xs-12 col-md-3 btn btn-primary">{ button }</button>
+                  })
+                }
               </div>
             </div>
           </div>
